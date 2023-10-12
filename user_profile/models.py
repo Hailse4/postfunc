@@ -25,8 +25,27 @@ class UserProfile(models.Model):
             img.save(self.image.path)
 
 
+class PostLikeModel(models.Model):
+    profile = models.ForeignKey(UserProfile,on_delete=models.CASCADE)
+    post = models.ForeignKey('PostModel',on_delete=models.CASCADE)
+    def __str__(self):
+        return self.profile.name + "_like"
+
+class PostCommentModel(models.Model):
+    profile = models.ForeignKey(UserProfile,on_delete=models.CASCADE)
+    comment = models.TextField(max_length=100)
+    post = models.ForeignKey('PostModel',on_delete=models.CASCADE)
     
-    
+class PostModel(models.Model):
+    profile = models.ForeignKey(UserProfile,on_delete=models.CASCADE)
+    description = models.TextField(max_length=100,blank=True,default="")
+    image = models.ImageField(upload_to="post_pics")
+    like = models.ForeignKey(PostLikeModel,on_delete=models.CASCADE)
+    comment = models.ForeignKey(PostCommentModel,on_delete=models.CASCADE)
+    def __str__(self):
+        model_name = self.profile.name + "_post_"+self.pk
+        return model_name
+     
 
     
     
